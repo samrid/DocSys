@@ -76,6 +76,7 @@ class IndexController extends Controller
         $document->timestamps = false;
         $document->update();
 
-        return redirect()->to(asset('storage/' . $document->file_path));
+        // return redirect()->to(asset('storage/' . $document->file_path));
+        return response()->download(storage_path('app/private/' . $document->file_path), $document->title . '.' . pathinfo($document->file_path, PATHINFO_EXTENSION));
     }
 }

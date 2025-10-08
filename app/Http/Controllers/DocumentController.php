@@ -61,7 +61,7 @@ class DocumentController extends Controller
         ]);
 
         $file = $request->file('file');
-        $path = $file->store('documents', 'public');
+        $path = $file->store('documents', 'private');
         $extension = strtolower($file->getClientOriginalExtension());
         $type = match ($extension) {
             'pdf' => 'pdf',
@@ -124,9 +124,9 @@ class DocumentController extends Controller
 
         $file = $request->file('file');
         if ($file) {
-            Storage::disk('public')->delete($document->file_path);
+            Storage::disk('private')->delete($document->file_path);
 
-            $path = $file->store('documents', 'public');
+            $path = $file->store('documents', 'private');
             $extension = strtolower($file->getClientOriginalExtension());
             $type = match ($extension) {
                 'pdf' => 'pdf',
@@ -155,8 +155,8 @@ class DocumentController extends Controller
     public function delete($id)
     {
         $document = Document::findOrFail($id);
-        if ($document->file_path && \Storage::disk('public')->exists($document->file_path)) {
-            \Storage::disk('public')->delete($document->file_path);
+        if ($document->file_path && \Storage::disk('private')->exists($document->file_path)) {
+            \Storage::disk('private')->delete($document->file_path);
         }
         $document->delete();
 

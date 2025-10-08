@@ -192,9 +192,9 @@ class CategoryController extends Controller
             abort(404);
         }
 
-        $department_id = $request->query('department', null);
+        $department_id = $request->query('department', 1);
         $file = $request->file('file');
-        $path = $file->store('documents', 'public');
+        $path = $file->store('documents', 'private');
         $extension = strtolower($file->getClientOriginalExtension());
 
         $type = match ($extension) {
@@ -207,6 +207,8 @@ class CategoryController extends Controller
             'rar', 'zip' => 'archive',
             default => 'other',
         };
+
+        // $department_id = $department_id == null ? 1 : $department_id;
 
         $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $document = new Document();
@@ -234,11 +236,12 @@ class CategoryController extends Controller
         ]);
     }
 
+
     public function document_delete($id)
     {
         $document = Document::findOrFail($id);
-        if ($document->file_path && \Storage::disk('public')->exists($document->file_path)) {
-            \Storage::disk('public')->delete($document->file_path);
+        if ($document->file_path && \Storage::disk('private')->exists($document->file_path)) {
+            \Storage::disk('private')->delete($document->file_path);
         }
         $document->delete();
 

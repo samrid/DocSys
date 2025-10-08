@@ -12,10 +12,10 @@ use App\Http\Middleware\UserActive;
 use Illuminate\Support\Facades\Route;
 
 
-Route::controller(IndexController::class)->group(function () {
+Route::controller(IndexController::class)->middleware(UserActive::class)->group(function () {
     Route::get('/', 'public')->name('public');
     Route::get('/search', 'search')->name('search');
-    Route::get('/index', 'index')->middleware(UserActive::class)->name('index');
+    Route::get('/index', 'index')->name('index');
     Route::get('/file/{uuid}', 'download_count')->name('download_count');
 });
 
